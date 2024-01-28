@@ -50,13 +50,13 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
-
+//  pre is a middleware that runs before a document is saved,it check if the password has been modified and if so, it hashes the password using bcrypt
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
-
+//here we are using method that create diffrent method which can be access by return instance of schema of User
 userSchema.method.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
